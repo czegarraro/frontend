@@ -1,15 +1,18 @@
 /**
  * Filters Store
  */
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { ProblemFilters } from '@/types/problem.types';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { ProblemFilters } from "@/types/problem.types";
 
 interface FiltersState {
   filters: ProblemFilters;
-  
+
   // Actions
-  setFilter: <K extends keyof ProblemFilters>(key: K, value: ProblemFilters[K]) => void;
+  setFilter: <K extends keyof ProblemFilters>(
+    key: K,
+    value: ProblemFilters[K]
+  ) => void;
   setFilters: (filters: Partial<ProblemFilters>) => void;
   clearFilters: () => void;
   clearFilter: (key: keyof ProblemFilters) => void;
@@ -21,20 +24,19 @@ interface FiltersState {
 const getLastWeekDate = () => {
   const date = new Date();
   date.setDate(date.getDate() - 7);
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 };
 
 // Get today's date
 const getTodayDate = () => {
-  return new Date().toISOString().split('T')[0];
+  return new Date().toISOString().split("T")[0];
 };
 
 const getDefaultFilters = (): ProblemFilters => ({
-  dateFrom: getLastWeekDate(),
-  dateTo: getTodayDate(),
+  // No default filters - show all data
 });
 
-// Start with default filters (last week)
+// Start with no filters (show all data)
 const initialFilters: ProblemFilters = getDefaultFilters();
 
 export const useFiltersStore = create<FiltersState>()(
@@ -81,15 +83,15 @@ export const useFiltersStore = create<FiltersState>()(
         return Object.keys(filters).filter((key) => {
           const value = filters[key as keyof ProblemFilters];
           if (Array.isArray(value)) return value.length > 0;
-          if (typeof value === 'boolean') return true;
-          if (typeof value === 'string') return value.length > 0;
-          if (typeof value === 'number') return true;
+          if (typeof value === "boolean") return true;
+          if (typeof value === "string") return value.length > 0;
+          if (typeof value === "number") return true;
           return false;
         }).length;
       },
     }),
     {
-      name: 'filters-storage',
+      name: "filters-storage",
     }
   )
 );

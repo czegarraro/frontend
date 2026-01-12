@@ -43,6 +43,8 @@ const FilterBar: React.FC = () => {
     impactLevel: '',
     search: '',
     hasRootCause: 'all',
+    isAutoRemediated: 'all',
+    autoRemediationWorked: 'all',
     durationMin: '',
     durationMax: '',
   });
@@ -56,6 +58,8 @@ const FilterBar: React.FC = () => {
       impactLevel: filters.impactLevel?.[0] || '',
       search: filters.search || '',
       hasRootCause: filters.hasRootCause === true ? 'true' : filters.hasRootCause === false ? 'false' : 'all',
+      isAutoRemediated: filters.isAutoRemediated === true ? 'true' : filters.isAutoRemediated === false ? 'false' : 'all',
+      autoRemediationWorked: filters.autoRemediationWorked === true ? 'true' : filters.autoRemediationWorked === false ? 'false' : 'all',
       durationMin: filters.durationMin?.toString() || '',
       durationMax: filters.durationMax?.toString() || '',
     });
@@ -83,6 +87,12 @@ const FilterBar: React.FC = () => {
     if (tempFilters.hasRootCause !== 'all') {
       newFilters.hasRootCause = tempFilters.hasRootCause === 'true';
     }
+    if (tempFilters.isAutoRemediated !== 'all') {
+      newFilters.isAutoRemediated = tempFilters.isAutoRemediated === 'true';
+    }
+    if (tempFilters.autoRemediationWorked !== 'all') {
+      newFilters.autoRemediationWorked = tempFilters.autoRemediationWorked === 'true';
+    }
     if (tempFilters.durationMin) {
       newFilters.durationMin = Number(tempFilters.durationMin);
     }
@@ -102,6 +112,8 @@ const FilterBar: React.FC = () => {
       impactLevel: '',
       search: '',
       hasRootCause: 'all',
+    isAutoRemediated: 'all',
+    autoRemediationWorked: 'all',
       durationMin: '',
       durationMax: '',
     });
@@ -228,7 +240,7 @@ const FilterBar: React.FC = () => {
             </div>
 
             {/* Second Row - Root Cause and Duration */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 pb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 px-4 pb-4">
               {/* Root Cause Filter */}
               <div className="space-y-2">
                 <label className="text-xs font-medium text-muted-foreground">
@@ -245,6 +257,37 @@ const FilterBar: React.FC = () => {
                     </option>
                   ))}
                 </select>
+              {/* Auto-Remediated Filter */}
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground">
+                  ¿Autoremediado?
+                </label>
+                <select
+                  value={tempFilters.isAutoRemediated}
+                  onChange={(e) => setTempFilters({ ...tempFilters, isAutoRemediated: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">Todos</option>
+                  <option value="true">Sí</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+
+              {/* Auto-Remediation Worked Filter */}
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground">
+                  ¿Funciona el Autoremediado?
+                </label>
+                <select
+                  value={tempFilters.autoRemediationWorked}
+                  onChange={(e) => setTempFilters({ ...tempFilters, autoRemediationWorked: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">Todos</option>
+                  <option value="true">Sí</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
               </div>
 
               {/* Duration Min */}
@@ -298,3 +341,6 @@ const FilterBar: React.FC = () => {
 };
 
 export default FilterBar;
+
+
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Problem type definitions (matching backend)
  */
 
@@ -95,6 +95,8 @@ export interface Problem {
   evidenceDetails: EvidenceDetails;
   recentComments: RecentComments;
   impactAnalysis: ImpactAnalysis;
+  Autoremediado?: boolean | string; // MongoDB stores as "Si"/"No"
+  FuncionoAutoRemediacion?: boolean | string; // MongoDB stores as "Si"/"No"
 }
 
 export interface ProblemFilters {
@@ -113,6 +115,8 @@ export interface ProblemFilters {
   hasRootCause?: boolean | null;
   evidenceType?: string[];
   search?: string;
+  isAutoRemediated?: boolean | null;
+  autoRemediationWorked?: boolean | null;
 }
 
 export interface PaginatedProblemsResponse {
@@ -143,3 +147,5 @@ export interface FilterOptions {
   evidenceTypes: string[];
   tags: string[];
 }
+
+

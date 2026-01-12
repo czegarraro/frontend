@@ -1,16 +1,18 @@
-/**
+﻿/**
  * Analytics Page - Advanced Visualizations
  */
-import React, { useEffect, useState } from 'react';
-import { analyticsApi } from '@/lib/api/analytics.api';
-import { useFiltersStore } from '@/store/filtersStore';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import BarChart from '@/components/charts/BarChart';
-import TreemapChart from '@/components/charts/TreemapChart';
-import FunnelChart from '@/components/charts/FunnelChart';
-import GaugeChart from '@/components/charts/GaugeChart';
-import PieChartWithPadAngle from '@/components/charts/PieChartWithPadAngle';
-import Spinner from '@/components/ui/Spinner';
+import React, { useEffect, useState } from "react";
+import { analyticsApi } from "@/lib/api/analytics.api";
+import { useFiltersStore } from "@/store/filtersStore";
+import Card, { CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import BarChart from "@/components/charts/BarChart";
+import TreemapChart from "@/components/charts/TreemapChart";
+import FunnelChart from "@/components/charts/FunnelChart";
+import GaugeChart from "@/components/charts/GaugeChart";
+import PieChartWithPadAngle from "@/components/charts/PieChartWithPadAngle";
+import RootCauseDonutChart from "@/components/charts/RootCauseDonutChart";
+import AutoRemediationDonutChart from "@/components/charts/AutoRemediationDonutChart";
+import Spinner from "@/components/ui/Spinner";
 
 const AnalyticsPage: React.FC = () => {
   const { filters } = useFiltersStore();
@@ -26,7 +28,14 @@ const AnalyticsPage: React.FC = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const [entitiesRes, zonesRes, funnelRes, kpisRes, rootCauseRes, rootDistRes] = await Promise.all([
+        const [
+          entitiesRes,
+          zonesRes,
+          funnelRes,
+          kpisRes,
+          rootCauseRes,
+          rootDistRes,
+        ] = await Promise.all([
           analyticsApi.getTopEntities(10, filters),
           analyticsApi.getManagementZones(filters),
           analyticsApi.getRemediationFunnel(filters),
@@ -42,7 +51,7 @@ const AnalyticsPage: React.FC = () => {
         setRootCauseAnalysis(rootCauseRes);
         setRootCauseDistribution(rootDistRes);
       } catch (error) {
-        console.error('Failed to fetch analytics data:', error);
+        console.error("Failed to fetch analytics data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -59,13 +68,17 @@ const AnalyticsPage: React.FC = () => {
     );
   }
 
-  const closedPercentage = kpis ? (kpis.closedProblems / kpis.totalProblems) * 100 : 0;
+  const closedPercentage = kpis
+    ? (kpis.closedProblems / kpis.totalProblems) * 100
+    : 0;
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
         <h1 className="text-3xl font-bold text-gradient">Advanced Analytics</h1>
-        <p className="text-muted-foreground mt-1">Deep dive into problem patterns and trends</p>
+        <p className="text-muted-foreground mt-1">
+          Deep dive into problem patterns and trends
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -85,10 +98,14 @@ const AnalyticsPage: React.FC = () => {
             <CardTitle>Resolution Rate</CardTitle>
           </CardHeader>
           <CardContent>
-            <GaugeChart value={Number(closedPercentage.toFixed(1))} title="Closed Problems" />
+            <GaugeChart
+              value={Number(closedPercentage.toFixed(1))}
+              title="Closed Problems"
+            />
             <div className="mt-4 text-center">
               <p className="text-sm text-muted-foreground">
-                {kpis?.closedProblems} of {kpis?.totalProblems} problems resolved
+                {kpis?.closedProblems} of {kpis?.totalProblems} problems
+                resolved
               </p>
             </div>
           </CardContent>
@@ -102,7 +119,9 @@ const AnalyticsPage: React.FC = () => {
             <CardTitle>Problems by Management Zone</CardTitle>
           </CardHeader>
           <CardContent>
-            {managementZones && <TreemapChart data={managementZones.zones} height="500px" />}
+            {managementZones && (
+              <TreemapChart data={managementZones.zones} height="500px" />
+            )}
           </CardContent>
         </Card>
 
@@ -112,7 +131,9 @@ const AnalyticsPage: React.FC = () => {
             <CardTitle>Remediation Pipeline</CardTitle>
           </CardHeader>
           <CardContent>
-            {remediationFunnel && <FunnelChart data={remediationFunnel.stages} />}
+            {remediationFunnel && (
+              <FunnelChart data={remediationFunnel.stages} />
+            )}
           </CardContent>
         </Card>
       </div>
@@ -124,7 +145,9 @@ const AnalyticsPage: React.FC = () => {
             <CardTitle>Root Cause Entities</CardTitle>
           </CardHeader>
           <CardContent>
-            {rootCauseAnalysis && <TreemapChart data={rootCauseAnalysis.data} height="500px" />}
+            {rootCauseAnalysis && (
+              <TreemapChart data={rootCauseAnalysis.data} height="500px" />
+            )}
           </CardContent>
         </Card>
 
@@ -134,9 +157,22 @@ const AnalyticsPage: React.FC = () => {
             <CardTitle>Root Cause Distribution</CardTitle>
           </CardHeader>
           <CardContent>
-            {rootCauseDistribution && <PieChartWithPadAngle data={rootCauseDistribution.data} height="500px" />}
+            {rootCauseDistribution && (
+              <PieChartWithPadAngle
+                data={rootCauseDistribution.data}
+                height="500px"
+              />
+            )}
           </CardContent>
         </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Root Cause Donut Chart */}
+        <RootCauseDonutChart />
+
+        {/* Auto-Remediation Donut Chart */}
+        <AutoRemediationDonutChart />
       </div>
     </div>
   );
